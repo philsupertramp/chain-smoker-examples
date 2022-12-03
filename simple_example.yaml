@@ -5,6 +5,8 @@ config:
     base_url: 'https://www.postman-echo.com/'
     auth_header:
       Authorization: "SOME TOKEN"
+  env:
+    foo: bar
 
 tests:
   get:
@@ -63,3 +65,25 @@ tests:
     contains:
       headers:
         authorization: "SOME TOKEN"
+  test_using_env:
+    method: 'post'
+    status_code: 200
+    uses:
+      endpoint: env.get("foo")
+    endpoint: 'post'
+    payload: '{"foo": "{endpoint}"}'
+    contains:
+      data:
+        foo: "baz"
+  test_using_headers:
+    method: 'post'
+    status_code: 200
+    endpoint: 'post'
+    payload: '{}'
+    headers:
+      foo: bar
+      nested: object.baz
+    contains:
+      headers:
+        foo: bar
+        nested: object.baz
